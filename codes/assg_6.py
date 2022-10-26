@@ -12,7 +12,7 @@ from numpy import linalg as LA
 
 import sys                                          #for path to external scripts
 sys.path.insert(0,'/home/user/Documents/CoordGeo')         #path to my scripts
-
+from sympy import*
 #local imports
 from line.funcs import *
 from triangle.funcs import *
@@ -22,51 +22,24 @@ from conics.funcs import circ_gen
 import subprocess
 import shlex
 #end if
-#C = np.array(([1,0],[1,0]))
-b = np.array(([4,2]))
-A = np.array(([2,3.3]))
-B = np.array(([2,-3.3]))
-e1 = np.array(([1,0]))
-#n1 = C[0,:]
-#n2 = C[1,:]
-c1 = b[0]
-c2 = b[1]
-p = np.array(([4,0]))
-X = np.array(([5,-8]))
-y = np.array(([5,5]))
-#Solution vector
-#O = LA.solve(C,b)
-
-#Direction vectors
-#m1 = omat@n1
-#m2 = omat@n2
-#print("abc",m1,m2)
-
-#Points on the lines
-#x1 = c1/(n1@e1)
-#A1 =  x1*e1
-#x2 = c2/(n2@e1)
-#A2 =  x2*e1
-#print(x1,x2)
-
-#Generating all lines
-k1 = 8
-k2 = -5
-#x_AB =line_dir_pt(m1,A1,k1,k2)
-#x_CD = line_dir_pt(m2,A2,k1,k2)
-
-
-#Plotting all lines
-#plt.plot(x_AB[0,:],x_AB[1,:])#,#label='$Diameter$')
-#plt.plot(x_CD[0,:],x_CD[1,:])#,label='$Diameter$')
-#plt.plot(x_Xy[0,:],x_Xy[1,:])#,label='$line$')
-#Input parameters
-#A = np.array(([-8,8]))
-#B = np.array(([-2.5,2.5]))
-
+h,k,f = symbols('h,k,f')
+I = np.array([[1,0],[0,1]])
+V = I
+x1 = np.array(([2,3]))
+x2 = np.array(([-1,1]))
+U = np.array(([h,k]))
+f1 = x1.T@V@x1+2*U.T@(x1)+f
+f2 = x2.T@V@x2+2*U.T@(x2)+f
+f3 = [1,-3]@U-11
+A = np.array([[2,3,1],[-2,2,1],[1,-3,0]])
+B = np.array([[-13,-2,-11]]).reshape(3,1)
+[h,k,f]= LA.inv(A)@B
+u1=np.array(([h,k]))
+print(u1)
 #Centre and radius
-c = np.array(([7/2,-5/2]))
-r = np.sqrt(65/4)
+c = -LA.inv(V)@u1
+print(c)
+r = np.sqrt(4)
 
 ##Generating all lines
 #x_AB = line_gen(A,B)
@@ -75,7 +48,7 @@ y = np.linspace(-6,3,50)
 x = (3*y+11)
 plt.plot(x,y)
 ##Generating the circle
-x_circ= circ_gen(c,r)
+x_circ= circ_gen(c.T,r)
 
 #Plotting all lines
 #plt.plot(x_AB[0,:],x_AB[1,:],label='$chord$')
@@ -88,7 +61,7 @@ plt.plot(x_circ[0,:],x_circ[1,:],label='$Circle$')
 
 #Labeling the coordinates
 #tri_coords = np.vstack((p,c,A,B,X,y)).T
-tri_coords= c.T
+tri_coords= c
 #print(tri_coords,tri_coords1)
 #print(tri_coords[0,0])
 #plt.scatter(tri_coords[0,:],tri_coords[1,:])
@@ -113,6 +86,3 @@ plt.savefig('/home/user/Documents/Assignments/assg_6/fig.pdf')
 #subprocess.run(shlex.split("termux-open /home/user/Documents/assg_6/fig.pdf"))
 #else
 plt.show()
-
-
-
